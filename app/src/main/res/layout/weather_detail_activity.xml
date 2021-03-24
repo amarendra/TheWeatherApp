@@ -11,7 +11,26 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:textSize="35sp"
-        android:text="Bangalore" />
+        tools:text="Bangalore" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/baseline_update_black_24" />
+
+
+        <TextView
+            android:id="@+id/tv_last_updated"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="3d4h" />
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/iv_weather_condition_2x"
@@ -41,8 +60,8 @@
             android:id="@+id/tv_min_temp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="18"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            tools:text="18" />
 
         <TextView
             android:id="@+id/tv_min_unit"
@@ -55,8 +74,8 @@
             android:id="@+id/tv_max_temp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="25"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            tools:text="25" />
 
         <TextView
             android:id="@+id/tv_max_unit"

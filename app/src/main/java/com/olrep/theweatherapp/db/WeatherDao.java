@@ -34,4 +34,7 @@ public interface WeatherDao {
 
     @Query("SELECT * FROM weather_data WHERE city ==:cityName ORDER BY last_updated DESC limit 1")
     WeatherData getCachedWeather(String cityName);
+
+    @Query("SELECT EXISTS(SELECT 1 FROM weather_data WHERE city_id = :cityId)")
+    boolean exists(long cityId);
 }

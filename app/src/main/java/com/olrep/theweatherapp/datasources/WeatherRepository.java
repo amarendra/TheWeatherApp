@@ -68,12 +68,24 @@ public class WeatherRepository {
         call.enqueue(new Callback<CurrentWeather>() {
             @Override
             public void onResponse(@NotNull Call<CurrentWeather> call, @NotNull Response<CurrentWeather> response) {
-                Log.d(TAG, "onResponse: " + response.body() + " | call: " + call.toString());
+                Log.d(TAG, "onResponse - response: " + response + " | response body: " + response.body());
 
-                WeatherData weatherData = new WeatherData(response.body());
+                if (response.code() == 200) {
+                    WeatherData weatherData = new WeatherData(response.body());
 
-                // save/update to db - udpate/insert check here todo
-                callback.onSuccess(weatherData);
+                    if (weatherDao.exists(weatherData.city_id)) {
+                        int res = update(weatherData);
+                        Log.d(TAG, "item exists, called update: " + res);
+                    } else {
+                        insert(weatherData);
+                        Log.d(TAG, "item didn't exist, called insert");
+                    }
+
+                    callback.onSuccess(weatherData);
+                } else {
+                    Log.e(TAG, "Response code is not 200");
+                    callback.onError( new Exception(response.message()));
+                }
             }
 
             @Override
@@ -87,11 +99,13 @@ public class WeatherRepository {
     private final Executor executor = Executors.newSingleThreadExecutor();
 
     public void insert(WeatherData weather) {
-        executor.execute(new Worker(weatherDao, weather, Operation.INSERT));
+        weatherDao.insert(weather);
+        //executor.execute(new Worker(weatherDao, weather, Operation.INSERT));
     }
 
-    public void update(WeatherData weather) {
-        executor.execute(new Worker(weatherDao, weather, Operation.UPDATE));
+    public int update(WeatherData weather) {
+        return weatherDao.update(weather);
+        //executor.execute(new Worker(weatherDao, weather, Operation.UPDATE));
     }
 
     public void delete(WeatherData weather) {

@@ -9,7 +9,7 @@ import com.olrep.theweatherapp.model.CurrentWeather;
 @Entity(tableName = "weather_data")
 public class WeatherData {
     @PrimaryKey
-    public long city_id;
+    public int city_id;
 
     @ColumnInfo(name = "city")
     public String city;
@@ -32,7 +32,7 @@ public class WeatherData {
     public String country;   // country code
 
     // not part of the weather api data
-    public double last_updated;
+    public long last_updated;
     public short favourite = -1; // -1: unset; 0: not fav; 1: fav
 
     public WeatherData() {
@@ -74,5 +74,26 @@ public class WeatherData {
 
     public void updateTime() {
         this.last_updated = System.currentTimeMillis();
+    }
+
+    @Override
+    public String toString() {
+        return "WeatherData{" +
+                "city_id=" + city_id +
+                ", city='" + city + '\'' +
+                ", lat=" + lat +
+                ", lon=" + lon +
+                ", weather_icon='" + weather_icon + '\'' +
+                ", weather_description='" + weather_description + '\'' +
+                ", temp=" + temp +
+                ", temp_min=" + temp_min +
+                ", temp_max=" + temp_max +
+                ", temp_feels_like=" + temp_feels_like +
+                ", wind_speed=" + wind_speed +
+                ", dt=" + dt +
+                ", country='" + country + '\'' +
+                ", last_updated=" + last_updated +
+                ", favourite=" + favourite +
+                '}';
     }
 }
