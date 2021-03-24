@@ -19,7 +19,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-@Database(entities = WeatherData.class, version = 2, exportSchema = false)
+@Database(entities = WeatherData.class, version = 3, exportSchema = false)
 public abstract class WeatherDatabase extends RoomDatabase {
     private final static String TAG = Constants.TAG + "WDB";
 

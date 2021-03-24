@@ -10,4 +10,15 @@ public final class Utils {
     public static String lastUpdated(long lastUpdated) {
         return (DateUtils.getRelativeTimeSpanString(lastUpdated)).toString();
     }
+
+    public static String lastUpdatedDuration(long lastUpdated) {
+        String value = lastUpdated(lastUpdated);
+        String ago = " ago";
+
+        if (value.contains(ago)) {
+            return value.replace(ago, "");
+        }
+
+        return value;
+    }
 }

@@ -47,7 +47,9 @@ public class FavAdapter extends ListAdapter<WeatherData, FavAdapter.FavHolder> {
     @Override
     public void onBindViewHolder(@NonNull FavHolder holder, int position) {
         WeatherData weather = getItem(position);
-        holder.textViewPlace.setText(weather.city);
+        holder.textViewPlace.setText(new StringBuilder().append(weather.city).append(", ").append(weather.country).toString());
+        holder.textViewTemp.setText(String.valueOf(weather.temp));
+        holder.textViewLastUpdated.setText(Utils.lastUpdatedDuration(weather.last_updated));
         holder.textViewMinTemp.setText(String.valueOf(weather.temp_min));
         holder.textViewMaxTemp.setText(String.valueOf(weather.temp_max));
         Picasso.get().load(Utils.getIconUrl(weather.weather_icon)).into(holder.imageWeatherCondition);
@@ -56,6 +58,8 @@ public class FavAdapter extends ListAdapter<WeatherData, FavAdapter.FavHolder> {
     class FavHolder extends RecyclerView.ViewHolder {
         private final TextView textViewPlace;
         private final ImageView imageWeatherCondition;
+        private final TextView textViewTemp;
+        private final TextView textViewLastUpdated;
         private final TextView textViewMinTemp;
         private final TextView textViewMaxTemp;
 
@@ -63,6 +67,8 @@ public class FavAdapter extends ListAdapter<WeatherData, FavAdapter.FavHolder> {
             super(itemView);
 
             textViewPlace = itemView.findViewById(R.id.tv_place);
+            textViewTemp = itemView.findViewById(R.id.tv_temp);
+            textViewLastUpdated = itemView.findViewById(R.id.tv_last_updated);
             textViewMinTemp = itemView.findViewById(R.id.tv_min_temp);
             textViewMaxTemp = itemView.findViewById(R.id.tv_max_temp);
             imageWeatherCondition = itemView.findViewById(R.id.iv_weather_condition);

@@ -59,4 +59,16 @@ public class WeatherDetailViewModel extends AndroidViewModel {
             }
         });
     }
+
+    public void setFavState(boolean setFav) {
+        int res = repository.setFavState(setFav, currentCityWeather.getValue().second);
+        Log.d(TAG, "Set fav done: " + res);
+
+        if (res > 0) {
+            currentCityWeather.getValue().second.favourite = setFav;
+            currentCityWeather.postValue(new Pair<>(true, currentCityWeather.getValue().second));
+        } else {
+            currentCityWeather.postValue(new Pair<>(false, currentCityWeather.getValue().second));
+        }
+    }
 }

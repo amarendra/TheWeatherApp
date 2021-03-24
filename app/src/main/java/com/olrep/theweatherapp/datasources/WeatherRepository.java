@@ -51,7 +51,7 @@ public class WeatherRepository {
     }
 
     public void init() {
-
+        // lazy load todo
     }
 
     public LiveData<List<WeatherData>> getFavourites() {
@@ -70,10 +70,15 @@ public class WeatherRepository {
             public void onResponse(@NotNull Call<CurrentWeather> call, @NotNull Response<CurrentWeather> response) {
                 Log.d(TAG, "onResponse - response: " + response + " | response body: " + response.body());
 
-                if (response.code() == 200) {
+                if (response.code() == 200 && response.body() != null) {
                     WeatherData weatherData = new WeatherData(response.body());
 
                     if (weatherDao.exists(weatherData.city_id)) {
+                        if (weatherDao.isFav(weatherData.city_id)) {
+                            Log.d(TAG, "Was an existing weather data so preserving fav state");
+                            weatherData.favourite = true;
+                        }
+
                         int res = update(weatherData);
                         Log.d(TAG, "item exists, called update: " + res);
                     } else {
@@ -83,7 +88,7 @@ public class WeatherRepository {
 
                     callback.onSuccess(weatherData);
                 } else {
-                    Log.e(TAG, "Response code is not 200");
+                    Log.e(TAG, "Response code is not 20, or body is null");
                     callback.onError( new Exception(response.message()));
                 }
             }
@@ -94,6 +99,11 @@ public class WeatherRepository {
                 callback.onError(t);
             }
         });
+    }
+
+    public int setFavState(boolean setFav, WeatherData weatherData) {
+        weatherData.favourite = setFav;
+        return weatherDao.update(weatherData);
     }
 
     private final Executor executor = Executors.newSingleThreadExecutor();

@@ -29,7 +29,7 @@ public interface WeatherDao {
     List<String> getCities();
 
 
-    @Query("SELECT * FROM weather_data WHERE favourite ORDER BY last_updated DESC")
+    @Query("SELECT * FROM weather_data WHERE favourite == 1 ORDER BY last_updated DESC")
     LiveData<List<WeatherData>> getFavourites();
 
     @Query("SELECT * FROM weather_data WHERE city ==:cityName ORDER BY last_updated DESC limit 1")
@@ -37,4 +37,7 @@ public interface WeatherDao {
 
     @Query("SELECT EXISTS(SELECT 1 FROM weather_data WHERE city_id = :cityId)")
     boolean exists(long cityId);
+
+    @Query("SELECT EXISTS(SELECT 1 FROM weather_data WHERE city_id = :cityId AND favourite == 1)")
+    boolean isFav(long cityId);
 }

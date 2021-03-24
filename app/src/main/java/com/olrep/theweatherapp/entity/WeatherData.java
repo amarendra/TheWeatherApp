@@ -33,7 +33,7 @@ public class WeatherData {
 
     // not part of the weather api data
     public long last_updated;
-    public short favourite = -1; // -1: unset; 0: not fav; 1: fav
+    public boolean favourite;
 
     public WeatherData() {
     }
