@@ -38,8 +38,17 @@ public class WeatherDetailViewModel extends AndroidViewModel {
 
     // if there's cached data, load it
     // and make an api call as well because activity always will have either city or lat/long
-    public void fetchCurrentCityWeather(String cityName, String lat, String lon) {
-        WeatherData cachedWeather = repository.getCachedWeather(cityName);
+    public void fetchCurrentCityWeather(String cityName, double lat, double lon) {
+        WeatherData cachedWeather = null;
+
+        if (!TextUtils.isEmpty(cityName)) {
+            Log.d(TAG, "Calling cache with city");
+            cachedWeather = repository.getCachedWeather(cityName);
+        } else {
+            Log.d(TAG, "Calling cache with lat/lon");
+            cachedWeather = repository.getCachedWeather(lat, lon);
+        }
+
         currentCityWeather.postValue(new Pair<>(true, cachedWeather));
 
         Log.d(TAG, "cachedWeather fetched: " + cachedWeather);
@@ -58,9 +67,9 @@ public class WeatherDetailViewModel extends AndroidViewModel {
     }
 
     // fetch weather from owm with lat/long
-    public void getWeather(@NonNull String lat, @NonNull String lon) {
+    public void getWeather(double lat, double lon) {
         Log.d(TAG, "getWeather called for lat: " + lat + ", lon: " + lon);
-        repository.getCityWeather(lat, lon, weatherCallback());
+        repository.getCityWeather(String.valueOf(lat), String.valueOf(lon), weatherCallback());
     }
 
     // just returns a weather call back - separate method as it's being used twice

@@ -1,6 +1,7 @@
 package com.olrep.theweatherapp.datasources;
 
 import android.app.Application;
+import android.location.Location;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -68,6 +69,36 @@ public class WeatherRepository {
     @Nullable
     public WeatherData getCachedWeather(String cityName) {
         return weatherDao.getCachedWeather(cityName);
+    }
+
+    // a hacky attempt to find cached data if there's one in db close enough because i can't really find cache based on lat/long exactly
+    // but it sort of works
+    @Nullable
+    public WeatherData getCachedWeather(double lat, double lon) {
+        List<WeatherData> all = weatherDao.getAll();
+        WeatherData cloestWeather = null;
+        float minDist = Float.MAX_VALUE;
+        float[] results = new float[2];
+
+        if (all != null) {
+            for (WeatherData weatherData : all) {
+                Location.distanceBetween(lat, lon, weatherData.lat, weatherData.lon, results);
+                Log.d(TAG, "distance for city -  " + weatherData.city + " is " + results[0]);
+
+                if (results[0] < minDist) {
+                    minDist = results[0];
+                    cloestWeather = weatherData;
+                }
+            }
+        }
+
+        Log.d(TAG, "minDist: " + minDist + " | closet weather so far found: " + cloestWeather);
+
+        if (cloestWeather != null && minDist < 1000 * 50.0) {   // for a location within 50km we treat as a the same city/place for cached weather -- refinement: what if two location gets merged due to this (e.g. twin cities) todo
+            return cloestWeather;
+        } else {
+            return null;
+        }
     }
 
     /**

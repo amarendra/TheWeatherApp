@@ -141,8 +141,8 @@ public class MainFragment extends Fragment implements ClickListener {
     private void startDetailActivity(double lat, double lon) {
         if (!isDetached() && getActivity() != null && !getActivity().isFinishing()) {
             Intent intent = new Intent(getActivity(), WeatherDetailActivity.class);
-            intent.putExtra("lat", String.valueOf(lat));
-            intent.putExtra("lon", String.valueOf(lon));
+            intent.putExtra("lat", lat);
+            intent.putExtra("lon", lon);
             startActivity(intent);
         } else {
             Log.e(TAG, "Activity finishing, not calling detail activity");

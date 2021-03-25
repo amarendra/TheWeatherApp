@@ -47,15 +47,17 @@ public class WeatherDetailActivity extends AppCompatActivity {
         Intent intent = getIntent();
 
         String city = null;
-        String lat = null, lon = null;
+        double lat = 0.0, lon = 0.0;
 
         // since i have to get city and lat/long both from last screen
         // i decided to save both and handle with one method call
         if (intent.hasExtra("city")) {
             city = intent.getStringExtra("city");
+            Log.d(TAG, "Activity started with city: " + city);
         } else {
-            lat = intent.getStringExtra("lat");
-            lon = intent.getStringExtra("lon");
+            lat = intent.getDoubleExtra("lat", 0.0);
+            lon = intent.getDoubleExtra("lon", 0d);
+            Log.d(TAG, "Activity started with lat/long: " + lat + ", " + lon);
         }
 
         // this method triggers data cache load and api call in advance
