@@ -8,23 +8,33 @@
     tools:context=".ui.main.MainFragment">
 
     <RelativeLayout
-        android:layout_marginTop="0dp"
         android:layout_width="match_parent"
-        android:layout_height="50dp">
+        android:layout_height="50dp"
+        android:layout_marginTop="0dp">
 
         <EditText
             android:id="@+id/et_search_city"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_toStartOf="@id/btn_search"
-            android:text="Enter city name" />
+            android:hint="Enter city name"
+            android:maxLines="1" />
+
+        <ImageView
+            android:id="@+id/iv_gps"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_toRightOf="@id/et_search_city"
+            android:src="@drawable/gps_icon" />
 
         <Button
             android:id="@+id/btn_search"
-            android:layout_alignParentEnd="true"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="Search" />
+            android:layout_alignParentEnd="true"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="10dp"
+            android:text="Go" />
 
     </RelativeLayout>
 
@@ -34,9 +44,9 @@
 
         <LinearLayout
             android:id="@+id/ll_no_favs_or_search"
-            android:visibility="visible"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:visibility="visible">
 
             <TextView
                 android:layout_width="wrap_content"

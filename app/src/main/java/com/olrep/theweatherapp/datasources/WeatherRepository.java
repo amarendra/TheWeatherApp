@@ -3,6 +3,7 @@ package com.olrep.theweatherapp.datasources;
 import android.app.Application;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 
@@ -18,6 +19,7 @@ import com.olrep.theweatherapp.utils.Constants;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.WeakHashMap;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -28,7 +30,7 @@ import retrofit2.Response;
 public class WeatherRepository {
     private static WeatherRepository instance;
 
-    private static final String TAG = Constants.TAG + WeatherRepository.class.getSimpleName();
+    private static final String TAG = Constants.TAG + "WR";
     private final WeatherDao weatherDao;
     private final WeatherService weatherService;
 
@@ -63,9 +65,18 @@ public class WeatherRepository {
         return weatherDao.getCachedWeather(cityName);
     }
 
-    public void getCityWeather(String cityName, final WeatherCallback<WeatherData> callback) {
-        Call<CurrentWeather> call = weatherService.getCurrentWeather(cityName);
-        call.enqueue(new Callback<CurrentWeather>() {
+    public void getCityWeather(@NonNull String cityName, @NonNull final WeatherCallback<WeatherData> callback) {
+        Call<CurrentWeather> cityCall = weatherService.getCurrentWeather(cityName);
+        cityCall.enqueue(networkCallback(callback));
+    }
+
+    public void getCityWeather(@NonNull String lat, @NonNull String lon, @NonNull final WeatherCallback<WeatherData> callback) {
+        Call<CurrentWeather> latLongCall = weatherService.getCurrentWeather(lat, lon);
+        latLongCall.enqueue(networkCallback(callback));
+    }
+
+    private Callback<CurrentWeather> networkCallback(@NonNull final WeatherCallback<WeatherData> callback) {
+        return new Callback<CurrentWeather>() {
             @Override
             public void onResponse(@NotNull Call<CurrentWeather> call, @NotNull Response<CurrentWeather> response) {
                 Log.d(TAG, "onResponse - response: " + response + " | response body: " + response.body());
@@ -89,7 +100,7 @@ public class WeatherRepository {
                     callback.onSuccess(weatherData);
                 } else {
                     Log.e(TAG, "Response code is not 20, or body is null");
-                    callback.onError( new Exception(response.message()));
+                    callback.onError(new Exception(response.message()));
                 }
             }
 
@@ -98,7 +109,7 @@ public class WeatherRepository {
                 Log.e(TAG, "onResponse: " + Log.getStackTraceString(t));
                 callback.onError(t);
             }
-        });
+        };
     }
 
     public int setFavState(boolean setFav, WeatherData weatherData) {

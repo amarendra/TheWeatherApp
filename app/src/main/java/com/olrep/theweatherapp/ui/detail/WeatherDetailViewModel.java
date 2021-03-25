@@ -1,8 +1,10 @@
 package com.olrep.theweatherapp.ui.detail;
 
 import android.app.Application;
+import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -33,19 +35,31 @@ public class WeatherDetailViewModel extends AndroidViewModel {
         return currentCityWeather;
     }
 
-    public void fetchCurrentCityWeather(String cityName) {
+    public void fetchCurrentCityWeather(String cityName, String lat, String lon) {
         WeatherData cachedWeather = repository.getCachedWeather(cityName);
         currentCityWeather.postValue(new Pair<>(true, cachedWeather));
 
         Log.d(TAG, "cachedWeather fetched: " + cachedWeather);
 
-        getWeather(cityName);
+        if (!TextUtils.isEmpty(cityName)) {
+            getWeather(cityName);
+        } else {
+            getWeather(lat, lon);
+        }
     }
 
-    public void getWeather(String cityName) {
+    public void getWeather(@NonNull String cityName) {
         Log.d(TAG, "getWeather called for city: " + cityName);
+        repository.getCityWeather(cityName, weatherCallback());
+    }
 
-        repository.getCityWeather(cityName, new WeatherCallback<WeatherData>() {
+    public void getWeather(@NonNull String lat, @NonNull String lon) {
+        Log.d(TAG, "getWeather called for lat: " + lat + ", lon: " + lon);
+        repository.getCityWeather(lat, lon, weatherCallback());
+    }
+
+    private WeatherCallback<WeatherData> weatherCallback() {
+        return new WeatherCallback<WeatherData>() {
             @Override
             public void onSuccess(WeatherData weatherData) {
                 Log.d(TAG, "success (posting on live data)");
@@ -57,7 +71,7 @@ public class WeatherDetailViewModel extends AndroidViewModel {
                 Log.e(TAG, "Error received (posting on live data): " + t.getMessage());
                 currentCityWeather.postValue(new Pair<>(false, currentCityWeather.getValue().second));
             }
-        });
+        };
     }
 
     public void setFavState(boolean setFav) {

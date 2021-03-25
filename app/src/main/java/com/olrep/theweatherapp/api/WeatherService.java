@@ -10,5 +10,6 @@ public interface WeatherService {
     @GET("data/2.5/weather?")
     Call<CurrentWeather> getCurrentWeather(@Query("q") String city);
 
+    @GET("data/2.5/weather?")
     Call<CurrentWeather> getCurrentWeather(@Query("lat") String lat, @Query("lon") String lon);
 }

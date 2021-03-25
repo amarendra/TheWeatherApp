@@ -31,17 +31,21 @@ public class WeatherDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.weather_detail_activity);
 
-        //viewModel = new ViewModelProvider(this).get(WeatherDetailViewModel.class);
         viewModel = new ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication())).get(WeatherDetailViewModel.class);
 
         Intent intent = getIntent();
 
         String city = null;
+        String lat = null, lon = null;
+
         if (intent.hasExtra("city")) {
             city = intent.getStringExtra("city");
+        } else {
+            lat = intent.getStringExtra("lat");
+            lon = intent.getStringExtra("lon");
         }
 
-        viewModel.fetchCurrentCityWeather(city);
+        viewModel.fetchCurrentCityWeather(city, lat, lon);
 
         final FloatingActionButton favButton = findViewById(R.id.btn_fav);
         favButton.setOnClickListener(v -> {
