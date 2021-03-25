@@ -3,12 +3,15 @@ package com.olrep.theweatherapp.ui.detail;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -22,10 +25,10 @@ import com.squareup.picasso.Picasso;
  * this activity shows the full screen view of a city/place weather
  * this can be made prettier and more functional but for a poc this is where I am
  * leaving it as of now
- *
+ * <p>
  * todo
- *  add owm's onecall api for this screen to show a collapsible weather forecast along with current weather data
- *  that will help me avoid make two api calls but onecall api response will be too heavy
+ * add owm's onecall api for this screen to show a collapsible weather forecast along with current weather data
+ * that will help me avoid make two api calls but onecall api response will be too heavy
  */
 public class WeatherDetailActivity extends AppCompatActivity {
     private final String TAG = Constants.TAG + "WDA";
@@ -43,6 +46,9 @@ public class WeatherDetailActivity extends AppCompatActivity {
         setContentView(R.layout.weather_detail_activity);
 
         viewModel = new ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication())).get(WeatherDetailViewModel.class);
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
         Intent intent = getIntent();
 
@@ -139,5 +145,17 @@ public class WeatherDetailActivity extends AppCompatActivity {
     // should have had just done that todo
     private boolean isFav(String tag) {
         return FAV_TAG.equals(tag);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            this.finish();
+            return true;
+        } else {
+            Log.d(TAG, "Some other id");
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
