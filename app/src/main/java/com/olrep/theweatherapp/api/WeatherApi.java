@@ -26,6 +26,7 @@ public class WeatherApi {
                 public Response intercept(@NotNull Chain chain) throws IOException {
                     Request request = chain.request();
 
+                    // added interceptor to set units and app id for every call
                     HttpUrl url = request.url().newBuilder()
                             .addQueryParameter("units", "metric")
                             .addQueryParameter("appid", BuildConfig.OWM_STAGE_API_KEY)

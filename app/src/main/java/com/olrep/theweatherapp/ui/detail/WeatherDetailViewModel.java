@@ -22,7 +22,7 @@ public class WeatherDetailViewModel extends AndroidViewModel {
     private final String TAG = Constants.TAG + "WDVM";
 
     private final WeatherRepository repository;
-    private final MutableLiveData<Pair<Boolean, WeatherData>> currentCityWeather;
+    private final MutableLiveData<Pair<Boolean, WeatherData>> currentCityWeather; // Boolean part is to indicate error or success of an op
 
     public WeatherDetailViewModel(@NonNull Application application) {
         super(application);
@@ -30,11 +30,14 @@ public class WeatherDetailViewModel extends AndroidViewModel {
         repository = WeatherRepository.getInstance(application);
     }
 
+    // this just provides the live data that activity can observe on
     public LiveData<Pair<Boolean, WeatherData>> getCurrentCityWeather() {
         Log.d(TAG, "getCurrentCityWeather called for live data");
         return currentCityWeather;
     }
 
+    // if there's cached data, load it
+    // and make an api call as well because activity always will have either city or lat/long
     public void fetchCurrentCityWeather(String cityName, String lat, String lon) {
         WeatherData cachedWeather = repository.getCachedWeather(cityName);
         currentCityWeather.postValue(new Pair<>(true, cachedWeather));
@@ -48,16 +51,20 @@ public class WeatherDetailViewModel extends AndroidViewModel {
         }
     }
 
+    // fetch weather from owm with city name
     public void getWeather(@NonNull String cityName) {
         Log.d(TAG, "getWeather called for city: " + cityName);
         repository.getCityWeather(cityName, weatherCallback());
     }
 
+    // fetch weather from owm with lat/long
     public void getWeather(@NonNull String lat, @NonNull String lon) {
         Log.d(TAG, "getWeather called for lat: " + lat + ", lon: " + lon);
         repository.getCityWeather(lat, lon, weatherCallback());
     }
 
+    // just returns a weather call back - separate method as it's being used twice
+    // it just modifies the mutable live data so that change will be propagated to activity
     private WeatherCallback<WeatherData> weatherCallback() {
         return new WeatherCallback<WeatherData>() {
             @Override
@@ -74,14 +81,16 @@ public class WeatherDetailViewModel extends AndroidViewModel {
         };
     }
 
+    // changes favourite state in db and propagates the change to live data as well so that activity can get it
     public void setFavState(boolean setFav) {
         int res = repository.setFavState(setFav, currentCityWeather.getValue().second);
         Log.d(TAG, "Set fav done: " + res);
 
-        if (res > 0) {
+        // on propagate changes if a row was updated
+        if (res == 1) {
             currentCityWeather.getValue().second.favourite = setFav;
             currentCityWeather.postValue(new Pair<>(true, currentCityWeather.getValue().second));
-        } else {
+        } else {    // some db error should view should know this
             currentCityWeather.postValue(new Pair<>(false, currentCityWeather.getValue().second));
         }
     }

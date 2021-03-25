@@ -56,25 +56,43 @@ public class WeatherRepository {
         // lazy load todo
     }
 
+    // returns all the favourite cities' weather data
     public LiveData<List<WeatherData>> getFavourites() {
         return weatherDao.getFavourites();
     }
 
+    /**
+     * @param cityName city for which cached data is needed
+     * @return returns the cached data if available
+     */
     @Nullable
     public WeatherData getCachedWeather(String cityName) {
         return weatherDao.getCachedWeather(cityName);
     }
 
+    /**
+     * @param cityName city name
+     * @param callback to send data back to view model
+     */
     public void getCityWeather(@NonNull String cityName, @NonNull final WeatherCallback<WeatherData> callback) {
         Call<CurrentWeather> cityCall = weatherService.getCurrentWeather(cityName);
         cityCall.enqueue(networkCallback(callback));
     }
 
+    /**
+     * @param lat, long lat, long
+     * @param callback to send data back to view model
+     */
     public void getCityWeather(@NonNull String lat, @NonNull String lon, @NonNull final WeatherCallback<WeatherData> callback) {
         Call<CurrentWeather> latLongCall = weatherService.getCurrentWeather(lat, lon);
         latLongCall.enqueue(networkCallback(callback));
     }
 
+    /**
+     * this is a common method to return network callback for both city and lat/long based calls
+     * @param callback callback for data sending back to view model
+     * @return retrofit callback
+     */
     private Callback<CurrentWeather> networkCallback(@NonNull final WeatherCallback<WeatherData> callback) {
         return new Callback<CurrentWeather>() {
             @Override
@@ -112,10 +130,20 @@ public class WeatherRepository {
         };
     }
 
+    /**
+     * @param setFav        whether to set fav or remove fav
+     * @param weatherData   data that has to be updated in db
+     * @return              returns row count where data was updated
+     */
     public int setFavState(boolean setFav, WeatherData weatherData) {
         weatherData.favourite = setFav;
         return weatherDao.update(weatherData);
     }
+
+    // =============== TODO ============================
+    // this can be used for db ops later - so that when the db is quite big (just in case) and
+    // even allowing on main thread doesn't help us anymore we can use this
+    // but ui flow and logic will have to tweaked to expect and adjust for potential delays
 
     private final Executor executor = Executors.newSingleThreadExecutor();
 

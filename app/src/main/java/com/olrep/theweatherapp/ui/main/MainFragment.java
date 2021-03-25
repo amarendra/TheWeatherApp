@@ -66,14 +66,15 @@ public class MainFragment extends Fragment implements ClickListener {
         View errorView = view.findViewById(R.id.ll_no_favs_or_search);
 
         RecyclerView recyclerView = view.findViewById(R.id.rv_favs);
-        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
-        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2)); // grid layout to show fav cards in 2 cols
+        recyclerView.setHasFixedSize(true); // this needs to be investigated (as i am modifying adapter list on the go) todo
 
         final FavAdapter adapter = new FavAdapter(this);
         recyclerView.setAdapter(adapter);
 
         favouritesViewModel = new ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(this.getActivity().getApplication())).get(FavouritesViewModel.class);
 
+        // we can just observe the live data as there's no api call on this screen
         favouritesViewModel.getFavourites().observe(this, currentWeathers -> {
             if (currentWeathers != null && currentWeathers.size() > 0) {
                 Log.d(TAG, "We have fav weathers");

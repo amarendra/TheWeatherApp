@@ -49,7 +49,7 @@ public class FavAdapter extends ListAdapter<WeatherData, FavAdapter.FavHolder> {
         WeatherData weather = getItem(position);
         holder.textViewPlace.setText(new StringBuilder().append(weather.city).append(", ").append(weather.country).toString());
         holder.textViewTemp.setText(String.valueOf(weather.temp));
-        holder.textViewLastUpdated.setText(Utils.lastUpdatedDuration(weather.last_updated));
+        holder.textViewLastUpdated.setText(Utils.lastUpdatedShort(weather.last_updated));
         holder.textViewMinTemp.setText(String.valueOf(weather.temp_min));
         holder.textViewMaxTemp.setText(String.valueOf(weather.temp_max));
         Picasso.get().load(Utils.getIconUrl(weather.weather_icon)).into(holder.imageWeatherCondition);
@@ -73,12 +73,8 @@ public class FavAdapter extends ListAdapter<WeatherData, FavAdapter.FavHolder> {
             textViewMaxTemp = itemView.findViewById(R.id.tv_max_temp);
             imageWeatherCondition = itemView.findViewById(R.id.iv_weather_condition);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    clickListener.onClick(getItem(getAdapterPosition()));
-                }
-            });
+            // giving the control back to main fragment to launch detail activity
+            itemView.setOnClickListener(v -> clickListener.onClick(getItem(getAdapterPosition())));
         }
     }
 }

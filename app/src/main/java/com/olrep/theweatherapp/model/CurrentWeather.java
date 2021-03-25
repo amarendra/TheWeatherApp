@@ -6,6 +6,10 @@ import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+/**
+ * this class and all the model classes in this package just get all the data from owm current weather
+ * api - it is not at all used in any business logic
+ */
 public class CurrentWeather {
     @SerializedName("coord")
     @Expose

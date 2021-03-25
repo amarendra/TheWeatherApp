@@ -30,8 +30,8 @@ public abstract class WeatherDatabase extends RoomDatabase {
     public static synchronized WeatherDatabase getInstance(Context context) {
         if (instance == null) {
             instance = Room.databaseBuilder(context.getApplicationContext(), WeatherDatabase.class, "weather_database")
-                    .fallbackToDestructiveMigration()
-                    .allowMainThreadQueries()
+                    .fallbackToDestructiveMigration()   // will need to change this if on migration data retention is needed - a custom strategy might be needed to retain data
+                    .allowMainThreadQueries()   // this is the dirty hack/shortcut which should not have been done - but this saved me a lot of time and for a small db it's just fine
                     .addCallback(roomCallback)
                     .build();
         }
@@ -54,6 +54,9 @@ public abstract class WeatherDatabase extends RoomDatabase {
         }
     };
 
+    // ========== TODO ==================
+    // again this can be used to offload any initial loading on db when it creates or udpates
+    // for example modifying data if a new schema is added -- but migration strategy would require change
     private final Executor executor = Executors.newSingleThreadExecutor();
     private final Handler handler = new Handler(Looper.getMainLooper());
 

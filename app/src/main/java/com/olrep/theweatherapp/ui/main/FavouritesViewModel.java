@@ -20,6 +20,7 @@ public class FavouritesViewModel extends AndroidViewModel {
         repository = WeatherRepository.getInstance(application);
     }
 
+    // gets favourites on call
     public LiveData<List<WeatherData>> getFavourites() {
         LiveData<List<WeatherData>> favourites = repository.getFavourites();
         return favourites != null ? favourites : new MutableLiveData<>();

@@ -6,6 +6,11 @@ import androidx.room.PrimaryKey;
 
 import com.olrep.theweatherapp.model.CurrentWeather;
 
+/**
+ * this pojo is what mapped to db table
+ * it is created from api response to keep a flat column hierarchy and avoid either multiple columns or
+ * saving stringified lists (or blobs) etc in a table cell
+ */
 @Entity(tableName = "weather_data")
 public class WeatherData {
     @PrimaryKey

@@ -46,14 +46,23 @@
             android:id="@+id/ll_no_favs_or_search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:orientation="vertical"
             android:visibility="visible">
+
+            <ImageView
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:src="@drawable/baseline_sentiment_very_dissatisfied" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="50dp"
-                android:text="No favs. Search a city's weather" />
+                android:layout_marginTop="20dp"
+                android:text="No favourite cities were found!\n\nSearch a city's weather from the search bar above. \n\nOr click the location icon to search for current location (location permission needed!!)"
+                android:textSize="25sp" />
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
