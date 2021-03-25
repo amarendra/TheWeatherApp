@@ -44,7 +44,7 @@ public interface WeatherDao {
     // if there's a city weather available we fetch it
     // would have been better if somehow i could implement this call based on city id but I guess as of now
     // i will just go with the assumption/hope that even for lat, long city bounds are properly managed on owm side
-    @Query("SELECT * FROM weather_data WHERE city ==:cityName ORDER BY last_updated DESC limit 1")
+    @Query("SELECT * FROM weather_data WHERE city LIKE :cityName ORDER BY last_updated DESC limit 1")
     WeatherData getCachedWeather(String cityName);
 
     // checks whether the city data received from api call is already present in db
