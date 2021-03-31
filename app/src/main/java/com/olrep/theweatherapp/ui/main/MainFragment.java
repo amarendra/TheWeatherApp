@@ -1,11 +1,13 @@
 package com.olrep.theweatherapp.ui.main;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.SearchView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.Manifest;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -23,13 +25,18 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.olrep.theweatherapp.R;
 import com.olrep.theweatherapp.contracts.ClickListener;
 import com.olrep.theweatherapp.entity.WeatherData;
@@ -45,6 +52,12 @@ public class MainFragment extends Fragment implements ClickListener {
 
     public static MainFragment newInstance() {
         return new MainFragment();
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Nullable
@@ -87,15 +100,8 @@ public class MainFragment extends Fragment implements ClickListener {
                 errorView.setVisibility(View.VISIBLE);
             }
         });
-        final Button searchButton = view.findViewById(R.id.btn_search);
 
-        final EditText cityInput = view.findViewById(R.id.et_search_city);
-
-        searchButton.setOnClickListener(v -> {
-            getTextForDetail(cityInput);
-        });
-
-        final ImageView gpsIcon = view.findViewById(R.id.iv_gps);
+        final FloatingActionButton gpsIcon = view.findViewById(R.id.fb_gps);
         gpsIcon.setOnClickListener(v -> {
             if (checkLocationPermission()) {
                 Location location = getLastKnownLocation();
@@ -105,16 +111,6 @@ public class MainFragment extends Fragment implements ClickListener {
                 }
             }
         });
-    }
-
-    private void getTextForDetail(EditText cityInput) {
-        Editable city = cityInput.getText();
-
-        if (!TextUtils.isEmpty(city)) {
-            startDetailActivity(city.toString());
-        } else {
-            Toast.makeText(getActivity(), "Enter a valid city name", Toast.LENGTH_LONG).show();
-        }
     }
 
     @Override
@@ -199,6 +195,37 @@ public class MainFragment extends Fragment implements ClickListener {
         }
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu, menu);
+        MenuItem searchMenuItem = menu.findItem(R.id.menu_item_search);
+        SearchView searchView = (SearchView) searchMenuItem.getActionView();
+        searchView.setIconified(true);
+
+        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Log.i(TAG, "onQueryTextSubmit: " + query);
+                if (query != null) {
+                    startDetailActivity(query);
+                }
+                hideSoftKeyboard();
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String query) {
+                Log.d(TAG, "onQueryTextChange: " + query);
+                return true;
+            }
+        });
+
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
     private Location getLastKnownLocation() {
         Location bestLocation = null;
 
@@ -221,5 +248,14 @@ public class MainFragment extends Fragment implements ClickListener {
         }
 
         return bestLocation;
+    }
+
+    private void hideSoftKeyboard() {
+        if (getActivity() == null || getActivity().getCurrentFocus() == null || getActivity().getCurrentFocus().getWindowToken() == null){
+            return;
+        }
+
+        InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
     }
 }

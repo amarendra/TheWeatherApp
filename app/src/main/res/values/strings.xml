@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">TheWeatherApp</string>
+    <string name="action_search">Enter city name</string>
 </resources>

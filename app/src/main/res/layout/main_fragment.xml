@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
@@ -7,62 +8,52 @@
     android:orientation="vertical"
     tools:context=".ui.main.MainFragment">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginTop="0dp">
-
-        <EditText
-            android:id="@+id/et_search_city"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_toStartOf="@id/btn_search"
-            android:hint="Enter city name"
-            android:maxLines="1" />
-
-        <ImageView
-            android:id="@+id/iv_gps"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_toRightOf="@id/et_search_city"
-            android:src="@drawable/gps_icon" />
-
-        <Button
-            android:id="@+id/btn_search"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentEnd="true"
-            android:layout_marginLeft="40dp"
-            android:layout_marginRight="10dp"
-            android:text="Go" />
-
-    </RelativeLayout>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fb_gps"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@null"
+        android:contentDescription="TODO"
+        android:elevation="0dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_gps"
+        app:backgroundTint="@android:color/transparent"
+        app:elevation="0dp"
+        app:fabSize="mini"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:maxImageSize="40dp" />
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:id="@+id/ll_no_favs_or_search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:gravity="center"
             android:orientation="vertical"
             android:visibility="visible">
 
             <ImageView
-                android:layout_width="80dp"
-                android:layout_height="80dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:src="@drawable/baseline_sentiment_very_dissatisfied" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
+                android:fontFamily="sans-serif-smallcaps"
+                android:textColor="@color/black"
                 android:text="No favourite cities were found!\n\nSearch a city's weather from the search bar above. \n\nOr click the location icon to search for current location (location permission needed!!)"
-                android:textSize="25sp" />
+                android:textSize="18sp" />
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
@@ -72,4 +63,4 @@
             android:visibility="gone" />
     </RelativeLayout>
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
