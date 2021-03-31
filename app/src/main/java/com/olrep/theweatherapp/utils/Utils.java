@@ -8,6 +8,10 @@ public final class Utils {
         return "http://openweathermap.org/img/wn/" + iconId + ".png";   // can add @Nx before . to get bigger size todo
     }
 
+    public static String getIconUrl2x(String iconId) {
+        return "http://openweathermap.org/img/wn/" + iconId + "@2x.png";   // can add @Nx before . to get bigger size todo
+    }
+
     // returns the last updated time diff as "4 hours ago"
     public static String lastUpdated(long lastUpdated) {
         return (DateUtils.getRelativeTimeSpanString(lastUpdated)).toString();

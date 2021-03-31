@@ -86,12 +86,11 @@ public class WeatherDetailActivity extends AppCompatActivity {
         // various ui elements to be shown
         final TextView cityTv = findViewById(R.id.tv_city_name);
         final TextView lastUpdatedTv = findViewById(R.id.tv_last_updated);
-        final TextView tempMinTv = findViewById(R.id.tv_min_temp);
-        final TextView tempMaxTv = findViewById(R.id.tv_max_temp);
-        final TextView tempTv = findViewById(R.id.tv_temp_large);
+        final TextView largeTempTv = findViewById(R.id.tv_temp_large);
+        final TextView tempRangeTv = findViewById(R.id.tv_temp_range);
         final TextView tempFeelsTv = findViewById(R.id.tv_temp_desc);
         final TextView weatherDescTv = findViewById(R.id.tv_weather_desc);
-        final ImageView weatherConditionTv = findViewById(R.id.iv_weather_condition_2x);
+        final ImageView weatherConditionIv = findViewById(R.id.iv_weather_condition_2x);
 
         // observing current weather live data via view model
         // both cached (from db) and network call gets updated and propagated here
@@ -103,21 +102,15 @@ public class WeatherDetailActivity extends AppCompatActivity {
 
             if (resultPair != null && resultPair.first && resultPair.second != null) {
                 Log.d(TAG, "setting views");
-                StringBuilder stringBuilder = new StringBuilder();
 
-                Picasso.get().load(Utils.getIconUrl(resultPair.second.weather_icon)).into(weatherConditionTv);
+                Picasso.get().load(Utils.getIconUrl2x(resultPair.second.weather_icon)).into(weatherConditionIv);
 
-                cityTv.setText(stringBuilder.append(resultPair.second.city).append(", ").append(resultPair.second.country).toString());
+                cityTv.setText(cityTv.getContext().getString(R.string.city_country, resultPair.second.city, resultPair.second.country));
                 lastUpdatedTv.setText(Utils.lastUpdated(resultPair.second.last_updated));
-                tempMinTv.setText(String.valueOf(resultPair.second.temp_min));
-                tempMaxTv.setText(String.valueOf(resultPair.second.temp_max));
-
-                stringBuilder.setLength(0);
-                tempTv.setText(stringBuilder.append((resultPair.second.temp)).append("°").toString());
-
-                stringBuilder.setLength(0);
-                tempFeelsTv.setText(stringBuilder.append("Temperate at this time feels like ").append(resultPair.second.temp_feels_like).append("°").toString());
-                weatherDescTv.setText(resultPair.second.weather_description);
+                largeTempTv.setText(largeTempTv.getContext().getString(R.string.large_temp, String.valueOf(resultPair.second.temp)));
+                tempRangeTv.setText(tempRangeTv.getContext().getString(R.string.temp_range, String.valueOf(resultPair.second.temp_min), String.valueOf(resultPair.second.temp_max)));
+                tempFeelsTv.setText(tempFeelsTv.getContext().getString(R.string.temp_feels_like, String.valueOf(resultPair.second.temp_feels_like)));
+                weatherDescTv.setText(weatherDescTv.getContext().getString(R.string.weather_condition, resultPair.second.weather_description));
 
                 favButton.setVisibility(View.VISIBLE);
 
@@ -137,7 +130,6 @@ public class WeatherDetailActivity extends AppCompatActivity {
     // to toggle add/remove icon of floating button
     private int getFavRes(boolean favourite) {
         return favourite ? R.drawable.ic_close : R.drawable.ic_add;
-
     }
 
     // checking whether it's a fav already

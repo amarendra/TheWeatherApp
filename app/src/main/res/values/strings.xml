@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">TheWeatherApp</string>
     <string name="action_search">Enter city name</string>
+    <string name="city_country">%1$s, %2$s</string>
+    <string name="large_temp">%1$s°</string>
+    <string name="temp_range">Temperature today will be between %1$s° and %2$2s°.</string>
+    <string name="temp_feels_like">But temperature right now feels like %1$s°.</string>
+    <string name="weather_condition">Today\'s weather condition is: %1$s.</string>
 </resources>
